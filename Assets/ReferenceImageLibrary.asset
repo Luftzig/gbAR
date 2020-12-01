@@ -25,3 +25,13 @@ MonoBehaviour:
     m_SpecifySize: 1
     m_Name: book-cover
     m_Texture: {fileID: 0}
+  - m_SerializedGuid:
+      m_GuidLow: 5536889340865679905
+      m_GuidHigh: 17387379936064906428
+    m_SerializedTextureGuid:
+      m_GuidLow: 6054308940662620547
+      m_GuidHigh: 16680155918126374602
+    m_Size: {x: 0.2, y: 0.2}
+    m_SpecifySize: 1
+    m_Name: one
+    m_Texture: {fileID: 0}
