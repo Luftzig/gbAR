@@ -4,7 +4,7 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
 
-[RequireComponent(typeof(ARReferencePointManager))]
+[RequireComponent(typeof(ARAnchorManager))]
 [RequireComponent(typeof(ARRaycastManager))]
 [RequireComponent(typeof(ARPlaneManager))]
 public class AnchorCreator : MonoBehaviour
@@ -22,7 +22,7 @@ public class AnchorCreator : MonoBehaviour
     {
         foreach (var anchor in m_Anchors)
         {
-            m_AnchorManager.RemoveReferencePoint(anchor);
+            m_AnchorManager.RemoveAnchor(anchor);
         }
         m_Anchors.Clear();
     }
@@ -30,9 +30,9 @@ public class AnchorCreator : MonoBehaviour
     void Awake()
     {
         m_RaycastManager = GetComponent<ARRaycastManager>();
-        m_AnchorManager = GetComponent<ARReferencePointManager>();
+        m_AnchorManager = GetComponent<ARAnchorManager>();
         m_PlaneManager = GetComponent<ARPlaneManager>();
-        m_Anchors = new List<ARReferencePoint>();
+        m_Anchors = new List<ARAnchor>();
     }
 
     void Update()
@@ -51,7 +51,7 @@ public class AnchorCreator : MonoBehaviour
             var hitPose = s_Hits[0].pose;
             var hitTrackableId = s_Hits[0].trackableId;
             var hitPlane = m_PlaneManager.GetPlane(hitTrackableId);
-            var anchor = m_AnchorManager.AttachReferencePoint(hitPlane, hitPose);
+            var anchor = m_AnchorManager.AttachAnchor(hitPlane, hitPose);
             Instantiate(m_AnchorPrefab, hitPose.position, hitPose.rotation);
             if (anchor == null)
             {
@@ -66,11 +66,11 @@ public class AnchorCreator : MonoBehaviour
 
     static List<ARRaycastHit> s_Hits = new List<ARRaycastHit>();
 
-    List<ARReferencePoint> m_Anchors;
+    List<ARAnchor> m_Anchors;
 
     ARRaycastManager m_RaycastManager;
 
-    ARReferencePointManager m_AnchorManager;
+    ARAnchorManager m_AnchorManager;
 
     ARPlaneManager m_PlaneManager;
 }
