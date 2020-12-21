@@ -5,16 +5,14 @@ using UnityEngine;
 public class DragWithMouse : MonoBehaviour
 {
 
-    private Vector3 mOffset;
-    private float mZCoord;
+    private Vector3 offset;
+    private float zCoord;
 
     void OnMouseDown()
     {
-        mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-        mOffset = gameObject.transform.position - GetMousePos();
+        zCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
+        offset = gameObject.transform.position - GetMousePos();
     }
-
-
 
     private Vector3 GetMousePos()
     {
@@ -23,17 +21,15 @@ public class DragWithMouse : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
 
         // z coordinate of game object on screen
-        mousePos.z = mZCoord;
+        mousePos.z = zCoord;
 
         // Convert it to world points
         return Camera.main.ScreenToWorldPoint(mousePos);
 
     }
 
-
-
     void OnMouseDrag()
     {
-        transform.position = GetMousePos() + mOffset;
+        transform.position = GetMousePos() + offset;
     }
 }
