@@ -28,18 +28,4 @@ public class Bubble : MonoBehaviour
         transform.position = bubblePos + wobbleVelocity * Time.deltaTime;
     }
   
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.name == "Cube")
-        {
-            if (bubbleBurstPrefab)
-            {
-                GameObject explosion = (GameObject)Instantiate(bubbleBurstPrefab, transform.position, bubbleBurstPrefab.transform.rotation);
-                Destroy(explosion, explosion.GetComponent<ParticleSystem>().main.startLifetimeMultiplier);
-                Debug.Log("Pop");
-                Destroy(gameObject);
-            }
-
-        }
-    }
 }

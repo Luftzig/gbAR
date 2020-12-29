@@ -23,6 +23,7 @@ public class BubbleEmitter : MonoBehaviour
 
             GameObject bubbleInstance = (GameObject)Instantiate(bubblePrefab);
             GameObject fruitInstance = (GameObject)Instantiate(fruitsList[i]);
+            fruitInstance.name = fruitsList[i].name;
             fruitInstance.transform.parent = bubbleInstance.transform;
             bubbleInstance.transform.position = new Vector3(Random.Range(-5f, 5f), Random.Range(0f, 3f), 0);
         }
