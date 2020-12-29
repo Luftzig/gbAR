@@ -6,10 +6,13 @@ public class BubbleEmitter : MonoBehaviour
 {
     public GameObject bubblePrefab;
     public float timeSpan = 1f;
-    public int numOfBubbles = 5;
+    public int numOfBubbles = 3;
+    public static GameObject[] fruitsList;
+
     // Emit bubbles randomly in the scene
     void Start()
     {
+        fruitsList = Resources.LoadAll<GameObject>("Prefabs/FruitPrefabs");
         StartCoroutine(EmittBubble());
     }
     private IEnumerator EmittBubble()
@@ -19,6 +22,8 @@ public class BubbleEmitter : MonoBehaviour
             yield return new WaitForSeconds(timeSpan);
 
             GameObject bubbleInstance = (GameObject)Instantiate(bubblePrefab);
+            GameObject fruitInstance = (GameObject)Instantiate(fruitsList[i]);
+            fruitInstance.transform.parent = bubbleInstance.transform;
             bubbleInstance.transform.position = new Vector3(Random.Range(-5f, 5f), Random.Range(0f, 3f), 0);
         }
     }
