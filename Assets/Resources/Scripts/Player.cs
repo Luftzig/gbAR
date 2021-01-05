@@ -13,7 +13,16 @@ public class Player : MonoBehaviour
             {
                 GameObject explosion = (GameObject)Instantiate(bubbleBurstPrefab, other.transform.position, bubbleBurstPrefab.transform.rotation);
                 Destroy(explosion, explosion.GetComponent<ParticleSystem>().main.startLifetimeMultiplier);
-                Debug.Log("Pop: "+other.transform.GetChild(0).name);
+
+                foreach (GameObject fruit in BubbleEmitter.requiredfruits)
+                {
+                    if(fruit.name== other.transform.GetChild(0).name)
+                    {
+                        print("Pop the correct fruit!");
+                        Transform fruitUI = BubbleEmitter.UIFruitList.transform.Find(fruit.name);
+                        fruitUI.GetChild(2).gameObject.SetActive(true);
+                    }
+                }
                 Destroy(other.gameObject);
             }
 
