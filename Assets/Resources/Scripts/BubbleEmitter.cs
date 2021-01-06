@@ -60,4 +60,9 @@ public class BubbleEmitter : MonoBehaviour
 
         return newList;
     }
+
+    public static void RemoveItemFromRequirements(GameObject obj)
+    {
+        requiredfruits.Remove(obj);
+    }
 }
