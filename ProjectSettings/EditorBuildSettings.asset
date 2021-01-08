@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Samples/Index/Index.unity
     guid: 9396535c99fb944afbc60c89799f316e
   - enabled: 0
-    path: Assets/Samples/MNIST/MNIST.unity
+    path: Assets/Scenes/SampleScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 0
     path: Assets/Samples/SSD/SSD.unity
@@ -23,7 +23,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Samples/StyleTransfer/StyleTransfer.unity
     guid: 494656ebdd6dc43b4843586753a539bb
-  - enabled: 1
+  - enabled: 0
     path: Assets/Samples/HandTracking/HandTracking.unity
     guid: 662ce65fb2adc439e84fa9fc8d766fe4
   - enabled: 1
@@ -41,4 +41,8 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Samples/TestWebcamRotation/TestWebcamRotation.unity
     guid: 9d50926a120584683985b32230436be4
-  m_configObjects: {}
+  m_configObjects:
+    UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 11310729b2d594b82a3068ac03540393,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 58f40b12bbc864f3c96c6505a9a1e1e3,
+      type: 2}
