@@ -1,0 +1,251 @@
+{
+    "m_SelectedDeviceId": "21f40b2d27027ece",
+    "m_SelectedPackage": {
+        "deviceId": "21f40b2d27027ece",
+        "name": "com.asus4.tfliteunitysample",
+        "processId": 3161,
+        "exited": false
+    },
+    "m_SelectedPriority": 1,
+    "m_KnownPackagesForSerialization": [
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 25377,
+            "exited": true
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 31657,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 9011,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 2900,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 3269,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 5961,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 12124,
+            "exited": true
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 20740,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 26761,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 5918,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 10460,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 12987,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 15419,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 21113,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 22918,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 27513,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 1384,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 4300,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 15175,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 18123,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 25854,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 30355,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 29785,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 15868,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 22699,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 29225,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 29575,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 1455,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 5091,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 27377,
+            "exited": false
+        },
+        {
+            "deviceId": "21f40b2d27027ece",
+            "name": "com.asus4.tfliteunitysample",
+            "processId": 3161,
+            "exited": false
+        }
+    ],
+    "m_Tags": {
+        "m_Entries": [
+            {
+                "m_Name": "Filter by all listed tags",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "No Filter",
+                "m_Selected": true
+            },
+            {
+                "m_Name": "",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "Tag Control...",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "Unity",
+                "m_Selected": false
+            },
+            {
+                "m_Name": "CRASH",
+                "m_Selected": false
+            }
+        ]
+    },
+    "m_MemoryViewerState": {
+        "MemoryWindowHeight": 300.0,
+        "MemoryWindowWidth": 170.0,
+        "MemoryTypeEnabled": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+        ],
+        "MemoryGroup": 1,
+        "Behavior": 1
+    },
+    "m_Filter": "BlazePose",
+    "m_FilterIsRegularExpression": false,
+    "m_SymbolPaths": []
+}
