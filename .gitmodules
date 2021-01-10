@@ -1,0 +1,3 @@
+[submodule "Packages/mediapipe-unity-hand-tracking"]
+	path = Packages/mediapipe-unity-hand-tracking
+	url = git@gitlab.com:thangnh.sas/mediapipe-unity-hand-tracking.git
