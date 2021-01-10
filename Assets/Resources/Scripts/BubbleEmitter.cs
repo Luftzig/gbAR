@@ -20,7 +20,7 @@ public class BubbleEmitter : MonoBehaviour
         fruitsList = new List<GameObject>(Resources.LoadAll<GameObject>("Prefabs/FruitPrefabs"));
         generatedfruits = GetRandomItemsFromList<GameObject>(fruitsList, numOfBubbles);
         requiredfruits = GetRandomItemsFromList<GameObject>(generatedfruits, numbOfFruitRequired);
-        EmittBubble();
+        EmitBubble();
         UIFruitList = GameObject.Find("CheckList");
         foreach (GameObject fruit in requiredfruits)
         {
@@ -30,7 +30,7 @@ public class BubbleEmitter : MonoBehaviour
             UIintsatnce.GetComponentInChildren<Text>().text = fruit.name;
         }
     }
-    private void EmittBubble()
+    private void EmitBubble()
     {
         for (int i = 0; i < numOfBubbles; i++)
         {
