@@ -748,8 +748,8 @@ MonoBehaviour:
     type: 3}
   numbOfFruitRequired: 2
   numOfBubbles: 4
-  maxInitBubbleHeight: 1
-  maxInitBubbleRange: 2
+  maxInitBubbleHeight: 0.5
+  maxInitBubbleRange: 1
 --- !u!114 &792877004
 MonoBehaviour:
   m_ObjectHideFlags: 0

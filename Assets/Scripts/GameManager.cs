@@ -137,12 +137,7 @@ public abstract class GameState
         {
             manager.textField.text = "Looking for player";
             Debug.DrawRay(manager.bubbleEmitter.transform.position, Vector3.up);
-            var needle = GameObject.Find("Needle");
-            if (needle != null)
-            {
-                needle.GetComponent<MeshRenderer>().enabled = true;
-                manager.debugText.text = $"Needle at: {needle.transform.position}";
-            }
+            canStart = true;
         }
 
         public override GameState GetNext()
@@ -153,18 +148,26 @@ public abstract class GameState
 
     public sealed class PlayLevel : GameState
     {
-        private readonly GameManager gameManager;
+        private readonly GameManager manager;
         public LevelSettings LevelSettings { get; }
 
         public PlayLevel(LevelSettings levelSettings, GameManager gameManager)
         {
-            this.gameManager = gameManager;
+            this.manager = gameManager;
             this.LevelSettings = levelSettings;
         }
 
         public override void Update(GameManager target)
         {
-            throw new NotImplementedException();
+            manager.textField.text = "Play";
+            var needle = GameObject.Find("Needle");
+            if (needle != null)
+            {
+                needle.GetComponent<MeshRenderer>().enabled = true;
+                var position = needle.transform.position;
+                manager.debugText.text =
+                    $"Needle at: {position}, {(Camera.current.transform.position - position).magnitude}";
+            }
         }
     }
 

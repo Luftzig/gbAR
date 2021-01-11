@@ -57,7 +57,7 @@ public class ARHandProcessor : MonoBehaviour {
         var wrist = currentHand.GetLandmark((int) ARHand.HandJoints.Wrist);
         var indexRoot = currentHand.GetLandmark((int) ARHand.HandJoints.IndexFingerMCP);
         var thumbRoot = currentHand.GetLandmark((int) ARHand.HandJoints.ThumbMCP);
-        needle.transform.position = indexRoot - (indexRoot - thumbRoot) / 2;
+        needle.transform.position = indexRoot + (indexRoot - wrist) / 2;
     }
 
     private bool isHandStay() {
