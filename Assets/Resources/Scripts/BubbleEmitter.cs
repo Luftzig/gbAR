@@ -13,6 +13,8 @@ public class BubbleEmitter : MonoBehaviour
     public static List<GameObject> generatedfruits;
     public static List<GameObject> requiredfruits;
     public static GameObject UIFruitList;
+    public float maxInitBubbleHeight = 1f;
+    public float maxInitBubbleRange = 2f;
 
     // Emit bubbles randomly in the scene
     void Start()
@@ -24,22 +26,23 @@ public class BubbleEmitter : MonoBehaviour
         UIFruitList = GameObject.Find("CheckList");
         foreach (GameObject fruit in requiredfruits)
         {
-            GameObject UIintsatnce= (GameObject)Instantiate(fruitUIPrefab);
+            GameObject UIintsatnce = (GameObject) Instantiate(fruitUIPrefab);
             UIintsatnce.name = fruit.name;
             UIintsatnce.transform.SetParent(UIFruitList.transform);
             UIintsatnce.GetComponentInChildren<Text>().text = fruit.name;
         }
     }
+
     private void EmitBubble()
     {
         for (int i = 0; i < numOfBubbles; i++)
         {
-
-            GameObject bubbleInstance = (GameObject)Instantiate(bubblePrefab);
-            GameObject fruitInstance = (GameObject)Instantiate(generatedfruits[i]);
+            GameObject bubbleInstance = (GameObject) Instantiate(bubblePrefab);
+            GameObject fruitInstance = (GameObject) Instantiate(generatedfruits[i]);
             fruitInstance.name = generatedfruits[i].name;
             fruitInstance.transform.parent = bubbleInstance.transform;
-            bubbleInstance.transform.position = new Vector3(Random.Range(-5f, 5f), Random.Range(0f, 3f), 0);
+            bubbleInstance.transform.position = new Vector3(Random.Range(-maxInitBubbleRange, maxInitBubbleRange),
+                Random.Range(0f, maxInitBubbleHeight), 0);
         }
     }
 

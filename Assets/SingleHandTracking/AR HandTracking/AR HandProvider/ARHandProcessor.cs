@@ -37,10 +37,27 @@ public class ARHandProcessor : MonoBehaviour {
             currentHand.ParseFrom(handLandmarksData, GetComponent<ARFrameProcessor>().ImageRatio);
         }
 
+        Debug.Assert(Hand != null, $"Hand is null! {Hand}");
         if (!Hand.activeInHierarchy) return;
-        for (int i = 0; i < Hand.transform.childCount; i++) {
+        for (int i = 0; i < Hand.transform.childCount-1; i++) {
             Hand.transform.GetChild(i).transform.position = currentHand.GetLandmark(i);
         }
+        PlaceNeedle();
+    }
+
+    private void PlaceNeedle()
+    {
+        var needle = GameObject.Find("Needle");
+        if (needle == null)
+        {
+            Debug.LogWarning("Failed to find the needle");
+            return;
+        }
+
+        var wrist = currentHand.GetLandmark((int) ARHand.HandJoints.Wrist);
+        var indexRoot = currentHand.GetLandmark((int) ARHand.HandJoints.IndexFingerMCP);
+        var thumbRoot = currentHand.GetLandmark((int) ARHand.HandJoints.ThumbMCP);
+        needle.transform.position = indexRoot - (indexRoot - thumbRoot) / 2;
     }
 
     private bool isHandStay() {

@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -15,19 +16,28 @@ public class GameManager : MonoBehaviour
     public ARPlaneManager arPlaneManager;
     public ARRaycastManager arRaycastManager;
     public Text textField;
+    public Text debugText;
     public float areaThreshold = 1.5f * 1.5f;
     public GameObject bubbleEmitter;
+    public GameObject hand;
+    public GameObject handTracking;
 
     void Start()
     {
         gameState = new GameState.LearnEnvironment(this);
+        gameState.Start();
     }
 
     // Update is called once per frame
     void Update()
     {
         gameState.Update(this);
-        gameState = gameState.GetNext();
+        var nextState = gameState.GetNext();
+        if (nextState != gameState)
+        {
+            nextState.Start();
+            gameState = nextState;
+        }
     }
 }
 
@@ -38,6 +48,10 @@ public abstract class GameState
     }
 
     public abstract void Update(GameManager target);
+
+    public virtual void Start()
+    {
+    }
 
     public virtual GameState GetNext()
     {
@@ -56,20 +70,33 @@ public abstract class GameState
             arPlaneManager = manager.arPlaneManager;
         }
 
+        public override void Start()
+        {
+            for (var i = 0; i < manager.hand.transform.childCount; i++)
+            {
+                manager.hand.transform.GetChild(i).GetComponent<MeshRenderer>().enabled = false;
+            }
+        }
+
         public override void Update(GameManager target)
         {
-            var mainPlane = Iterate(arPlaneManager).Where(plane => plane.alignment == PlaneAlignment.HorizontalUp)
-                .OrderBy(plane => plane.size.magnitude)
+            var mainPlane = IterateTrackables(arPlaneManager.trackables)
+                .Where(plane => plane.alignment == PlaneAlignment.HorizontalUp)
+                .OrderByDescending(CalcPlaneArea)
                 .FirstOrDefault();
             if (mainPlane != null)
             {
-                Debug.Log($"Game plane is: {mainPlane.center}, {mainPlane.size.magnitude}, {mainPlane.normal}");
-                Debug.DrawRay(mainPlane.center, mainPlane.normal, Color.magenta, 20, true);
-                if (mainPlane.size.magnitude > manager.areaThreshold)
+                if (manager.debugText != null)
+                {
+                    manager.debugText.text = $"Play area is {CalcPlaneArea(mainPlane)}";
+                }
+
+                if (CalcPlaneArea(mainPlane) > manager.areaThreshold)
                 {
                     gamePlane = mainPlane;
                     target.textField.text = "Game plane set!";
                     manager.bubbleEmitter.transform.position = gamePlane.center;
+                    manager.bubbleEmitter.transform.SetParent(gamePlane.transform);
                     manager.bubbleEmitter.SetActive(true);
                 }
             }
@@ -79,41 +106,59 @@ public abstract class GameState
             }
         }
 
+        private float CalcPlaneArea(ARPlane plane)
+        {
+            return plane.size.x * plane.size.y;
+        }
+
         public override GameState GetNext()
         {
-            if (gamePlane == null)
-            {
-                return this;
-            }
-            else
-            {
-                return new LocatePlayer(manager);
-            }
+            return gamePlane == null ? (GameState) this : new LocatePlayer(manager);
         }
     }
 
     public sealed class LocatePlayer : GameState
     {
         private readonly GameManager manager;
+        private bool canStart = false;
 
         public LocatePlayer(GameManager manager)
         {
             this.manager = manager;
         }
 
+        public override void Start()
+        {
+            // manager.handTracking.SetActive(true);
+            manager.debugText.text = "Starting hand-tracking";
+        }
+
         public override void Update(GameManager target)
         {
             manager.textField.text = "Looking for player";
             Debug.DrawRay(manager.bubbleEmitter.transform.position, Vector3.up);
+            var needle = GameObject.Find("Needle");
+            if (needle != null)
+            {
+                needle.GetComponent<MeshRenderer>().enabled = true;
+                manager.debugText.text = $"Needle at: {needle.transform.position}";
+            }
+        }
+
+        public override GameState GetNext()
+        {
+            return canStart ? new PlayLevel(new LevelSettings(), manager) : (GameState) this;
         }
     }
 
     public sealed class PlayLevel : GameState
     {
+        private readonly GameManager gameManager;
         public LevelSettings LevelSettings { get; }
 
-        public PlayLevel(LevelSettings levelSettings)
+        public PlayLevel(LevelSettings levelSettings, GameManager gameManager)
         {
+            this.gameManager = gameManager;
             this.LevelSettings = levelSettings;
         }
 
@@ -138,9 +183,9 @@ public abstract class GameState
         }
     }
 
-    static IEnumerable<ARPlane> Iterate(ARPlaneManager planeManager)
+    private static IEnumerable<T> IterateTrackables<T>(TrackableCollection<T> collection)
     {
-        var iterator = planeManager.trackables.GetEnumerator();
+        var iterator = collection.GetEnumerator();
         while (iterator.MoveNext())
         {
             yield return iterator.Current;

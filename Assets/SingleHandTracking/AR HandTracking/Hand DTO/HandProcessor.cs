@@ -33,7 +33,5 @@ namespace MediapipeHandTracking {
                 singleHandMain.Dispose();
             }
         }
-
-       
     }
 }

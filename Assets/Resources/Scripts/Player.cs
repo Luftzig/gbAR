@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        Debug.Assert(BubbleEmitter.requiredfruits != null, "How is this null?");
         if (BubbleEmitter.requiredfruits.Count == 0)
         {
             Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);

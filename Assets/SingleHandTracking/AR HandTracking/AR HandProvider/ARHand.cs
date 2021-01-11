@@ -55,6 +55,7 @@ public class ARHand
                 landmarksCP = (Vector3[]) landmarks.Clone();
             }
         }
+
     }
 
     public bool isVibrate(float deltaVibrate)
@@ -75,7 +76,7 @@ public class ARHand
         return new ARHand((Vector3[]) landmarks.Clone());
     }
 
-    enum HandJoints : int
+    public enum HandJoints : int
     {
         Wrist = 0,
         ThumbMCP = 2,
