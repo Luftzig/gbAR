@@ -166,6 +166,8 @@ public abstract class GameState
                     if (hit.collider.gameObject == marker)
                     {
                         canStart = true;
+                        // We don't need to track planes anymore.
+                        manager.arPlaneManager.detectionMode = PlaneDetectionMode.None;
                         return;
                     }
 
@@ -187,6 +189,7 @@ public abstract class GameState
             }
 
             marker.transform.position = arRaycastHit.pose.position;
+            marker.transform.rotation.SetLookRotation(Camera.current.transform.position - marker.transform.position);
         }
 
         public override GameState GetNext()
