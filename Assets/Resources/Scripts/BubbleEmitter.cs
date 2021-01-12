@@ -29,7 +29,8 @@ public class BubbleEmitter : MonoBehaviour
             GameObject UIintsatnce = (GameObject) Instantiate(fruitUIPrefab);
             UIintsatnce.name = fruit.name;
             UIintsatnce.transform.SetParent(UIFruitList.transform);
-            UIintsatnce.GetComponentInChildren<Text>().text = fruit.name;
+            Sprite fruitIcon = Resources.Load<Sprite>("UI/" + fruit.name);
+            UIintsatnce.transform.Find("Image").GetComponent<Image>().sprite = fruitIcon;
         }
     }
 
