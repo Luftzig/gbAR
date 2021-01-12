@@ -148,13 +148,13 @@ public abstract class GameState
             {
                 target.textField.text = "Game plane set!";
                 var arRaycastHit = hits.First(); // can this throw an exception?
+                manager.debugText.text = $"Point selected: {arRaycastHit.pose.position}";
                 bubbleEmitter.transform.position = arRaycastHit.pose.position;
                 bubbleEmitter.transform.SetParent(manager.arSessionOrigin.transform);
                 if (marker == null)
                 {
                     marker = GameObject.Instantiate(manager.markerPrefab, manager.arSessionOrigin.transform);
                 }
-
                 marker.transform.position = arRaycastHit.pose.position;
                 // bubbleEmitter.SetActive(true);
             }
