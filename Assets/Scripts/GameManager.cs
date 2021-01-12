@@ -15,7 +15,7 @@ using Object = System.Object;
 public class GameManager : MonoBehaviour
 {
     private GameState gameState;
-     public ARSessionOrigin arSessionOrigin;
+    public ARSessionOrigin arSessionOrigin;
     public ARPlaneManager arPlaneManager;
     public ARRaycastManager arRaycastManager;
     public Text textField;
@@ -135,29 +135,58 @@ public abstract class GameState
 
         public override void Update(GameManager target)
         {
-            manager.textField.text = "Select the point where the player will start";
-            var bubbleEmitter = manager.bubbleEmitter;
-            Debug.DrawRay(bubbleEmitter.transform.position, Vector3.up);
-            // canStart = true;
-            if (Input.touchCount == 0)
+            if (null == marker)
             {
-                return;
+                manager.textField.text = "Select the point where the player will start";
+                var bubbleEmitter = manager.bubbleEmitter;
+                if (Input.touchCount == 0)
+                {
+                    return;
+                }
+
+                if (manager.arRaycastManager.Raycast(Input.GetTouch(0).position, hits, TrackableType.Planes))
+                {
+                    target.textField.text = "Game plane set!";
+                    var arRaycastHit = hits.First(); // can this throw an exception?
+                    manager.debugText.text = $"Point selected: {arRaycastHit.pose.position}";
+                    RepositionGameStart(bubbleEmitter, arRaycastHit);
+                }
+            }
+            else
+            {
+                manager.textField.text = "Click the marker again to start!";
+                if (Input.touchCount == 0)
+                {
+                    return;
+                }
+
+                RaycastHit hit;
+                if (Physics.Raycast(Camera.current.ScreenPointToRay(Input.GetTouch(0).position), out hit))
+                {
+                    if (hit.collider.gameObject == marker)
+                    {
+                        canStart = true;
+                        return;
+                    }
+
+                    if (manager.arRaycastManager.Raycast(Input.GetTouch(0).position, hits, TrackableType.Planes))
+                    {
+                        RepositionGameStart(manager.bubbleEmitter, hits.First());
+                    }
+                }
+            }
+        }
+
+        private void RepositionGameStart(GameObject bubbleEmitter, ARRaycastHit arRaycastHit)
+        {
+            bubbleEmitter.transform.position = arRaycastHit.pose.position;
+            bubbleEmitter.transform.SetParent(manager.arSessionOrigin.transform);
+            if (marker == null)
+            {
+                marker = GameObject.Instantiate(manager.markerPrefab, manager.arSessionOrigin.transform);
             }
 
-            if (manager.arRaycastManager.Raycast(Input.GetTouch(0).position, hits, TrackableType.Planes))
-            {
-                target.textField.text = "Game plane set!";
-                var arRaycastHit = hits.First(); // can this throw an exception?
-                manager.debugText.text = $"Point selected: {arRaycastHit.pose.position}";
-                bubbleEmitter.transform.position = arRaycastHit.pose.position;
-                bubbleEmitter.transform.SetParent(manager.arSessionOrigin.transform);
-                if (marker == null)
-                {
-                    marker = GameObject.Instantiate(manager.markerPrefab, manager.arSessionOrigin.transform);
-                }
-                marker.transform.position = arRaycastHit.pose.position;
-                // bubbleEmitter.SetActive(true);
-            }
+            marker.transform.position = arRaycastHit.pose.position;
         }
 
         public override GameState GetNext()
@@ -169,6 +198,7 @@ public abstract class GameState
     public sealed class PlayLevel : GameState
     {
         private readonly GameManager manager;
+        private GameObject needle;
         public LevelSettings LevelSettings { get; }
 
         public PlayLevel(LevelSettings levelSettings, GameManager gameManager)
@@ -180,14 +210,19 @@ public abstract class GameState
         public override void Update(GameManager target)
         {
             manager.textField.text = "Play";
-            var needle = GameObject.Find("Needle");
             if (needle != null)
             {
-                needle.GetComponent<MeshRenderer>().enabled = true;
                 var position = needle.transform.position;
                 manager.debugText.text =
                     $"Needle at: {position}, {(Camera.current.transform.position - position).magnitude}";
             }
+        }
+
+        public override void Start()
+        {
+            needle = GameObject.Find("Needle");
+            needle.GetComponent<MeshRenderer>().enabled = true;
+            manager.bubbleEmitter.SetActive(true);
         }
     }
 
