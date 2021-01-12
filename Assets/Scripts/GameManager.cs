@@ -5,14 +5,17 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
+using Object = System.Object;
 
 public class GameManager : MonoBehaviour
 {
     private GameState gameState;
+     public ARSessionOrigin arSessionOrigin;
     public ARPlaneManager arPlaneManager;
     public ARRaycastManager arRaycastManager;
     public Text textField;
@@ -20,7 +23,7 @@ public class GameManager : MonoBehaviour
     public float areaThreshold = 1.5f * 1.5f;
     public GameObject bubbleEmitter;
     public GameObject hand;
-    public GameObject handTracking;
+    public GameObject markerPrefab;
 
     void Start()
     {
@@ -94,10 +97,6 @@ public abstract class GameState
                 if (CalcPlaneArea(mainPlane) > manager.areaThreshold)
                 {
                     gamePlane = mainPlane;
-                    target.textField.text = "Game plane set!";
-                    manager.bubbleEmitter.transform.position = gamePlane.center;
-                    manager.bubbleEmitter.transform.SetParent(gamePlane.transform);
-                    manager.bubbleEmitter.SetActive(true);
                 }
             }
             else
@@ -121,6 +120,8 @@ public abstract class GameState
     {
         private readonly GameManager manager;
         private bool canStart = false;
+        private List<ARRaycastHit> hits = new List<ARRaycastHit>();
+        private GameObject marker;
 
         public LocatePlayer(GameManager manager)
         {
@@ -129,15 +130,34 @@ public abstract class GameState
 
         public override void Start()
         {
-            // manager.handTracking.SetActive(true);
-            manager.debugText.text = "Starting hand-tracking";
+            // manager.debugText.text = "Starting hand-tracking";
         }
 
         public override void Update(GameManager target)
         {
-            manager.textField.text = "Looking for player";
-            Debug.DrawRay(manager.bubbleEmitter.transform.position, Vector3.up);
-            canStart = true;
+            manager.textField.text = "Select the point where the player will start";
+            var bubbleEmitter = manager.bubbleEmitter;
+            Debug.DrawRay(bubbleEmitter.transform.position, Vector3.up);
+            // canStart = true;
+            if (Input.touchCount == 0)
+            {
+                return;
+            }
+
+            if (manager.arRaycastManager.Raycast(Input.GetTouch(0).position, hits, TrackableType.Planes))
+            {
+                target.textField.text = "Game plane set!";
+                var arRaycastHit = hits.First(); // can this throw an exception?
+                bubbleEmitter.transform.position = arRaycastHit.pose.position;
+                bubbleEmitter.transform.SetParent(manager.arSessionOrigin.transform);
+                if (marker == null)
+                {
+                    marker = GameObject.Instantiate(manager.markerPrefab, manager.arSessionOrigin.transform);
+                }
+
+                marker.transform.position = arRaycastHit.pose.position;
+                // bubbleEmitter.SetActive(true);
+            }
         }
 
         public override GameState GetNext()
