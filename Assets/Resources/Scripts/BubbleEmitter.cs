@@ -15,6 +15,7 @@ public class BubbleEmitter : MonoBehaviour
     public static GameObject UIFruitList;
     public float maxInitBubbleHeight = 1f;
     public float maxInitBubbleRange = 2f;
+    public Plane interactionPlane { get; set; }
 
     // Emit bubbles randomly in the scene
     void Start()

@@ -483,6 +483,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db194eb9f1611294cbce1afbe3ae706c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &223974230 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4403715500270205307, guid: bc204d438273ee44ea23541f4a097ad6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1232083094}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223974226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 867ef428906b43a46a84d9392d7f0231, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &398546469
 GameObject:
   m_ObjectHideFlags: 0
@@ -1403,6 +1415,7 @@ MonoBehaviour:
   areaThreshold: 2.25
   bubbleEmitter: {fileID: 792877002}
   hand: {fileID: 64521379}
+  handProcessor: {fileID: 223974230}
   markerPrefab: {fileID: 7466220398316170989, guid: 90263f248e5c44775a5e0967a9dc9fa3,
     type: 3}
 --- !u!4 &1811362112

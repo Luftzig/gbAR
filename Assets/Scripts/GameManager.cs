@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using NUnit.Framework;
 using UnityEngine;
@@ -11,6 +12,8 @@ using UnityEngine.UIElements;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Object = System.Object;
+using Plane = UnityEngine.Plane;
+using Vector3 = UnityEngine.Vector3;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,7 +26,9 @@ public class GameManager : MonoBehaviour
     public float areaThreshold = 1.5f * 1.5f;
     public GameObject bubbleEmitter;
     public GameObject hand;
+    public ARHandProcessor handProcessor;
     public GameObject markerPrefab;
+    public Plane playingPlane;
 
     void Start()
     {
@@ -112,18 +117,18 @@ public abstract class GameState
 
         public override GameState GetNext()
         {
-            return gamePlane == null ? (GameState) this : new LocatePlayer(manager);
+            return gamePlane == null ? (GameState) this : new PlaceMarker(manager);
         }
     }
 
-    public sealed class LocatePlayer : GameState
+    public sealed class PlaceMarker : GameState
     {
         private readonly GameManager manager;
         private bool canStart = false;
         private List<ARRaycastHit> hits = new List<ARRaycastHit>();
         private GameObject marker;
 
-        public LocatePlayer(GameManager manager)
+        public PlaceMarker(GameManager manager)
         {
             this.manager = manager;
         }
@@ -138,45 +143,64 @@ public abstract class GameState
             if (null == marker)
             {
                 manager.textField.text = "Select the point where the player will start";
-                var bubbleEmitter = manager.bubbleEmitter;
-                if (Input.touchCount == 0)
+                TryPlaceMarker(target);
+            }
+            else
+            {
+                manager.textField.text = "Click the marker again to start!";
+                ConfirmMarker();
+            }
+        }
+
+        private void ConfirmMarker()
+        {
+            if (Input.touchCount == 0)
+            {
+                return;
+            }
+
+            RaycastHit hit;
+            if (Physics.Raycast(Camera.current.ScreenPointToRay(Input.GetTouch(0).position), out hit))
+            {
+                if (hit.collider.gameObject == marker)
                 {
+                    CreatePlayingPlane(out manager.playingPlane);
+                    canStart = true;
+                    // We don't need to track planes anymore.
                     return;
                 }
 
                 if (manager.arRaycastManager.Raycast(Input.GetTouch(0).position, hits, TrackableType.Planes))
                 {
-                    target.textField.text = "Game plane set!";
-                    var arRaycastHit = hits.First(); // can this throw an exception?
-                    manager.debugText.text = $"Point selected: {arRaycastHit.pose.position}";
-                    RepositionGameStart(bubbleEmitter, arRaycastHit);
+                    RepositionGameStart(manager.bubbleEmitter, hits.First());
                 }
             }
-            else
+        }
+
+        private void TryPlaceMarker(GameManager target)
+        {
+            var bubbleEmitter = manager.bubbleEmitter;
+            if (Input.touchCount == 0)
             {
-                manager.textField.text = "Click the marker again to start!";
-                if (Input.touchCount == 0)
-                {
-                    return;
-                }
-
-                RaycastHit hit;
-                if (Physics.Raycast(Camera.current.ScreenPointToRay(Input.GetTouch(0).position), out hit))
-                {
-                    if (hit.collider.gameObject == marker)
-                    {
-                        canStart = true;
-                        // We don't need to track planes anymore.
-                        manager.arPlaneManager.detectionMode = PlaneDetectionMode.None;
-                        return;
-                    }
-
-                    if (manager.arRaycastManager.Raycast(Input.GetTouch(0).position, hits, TrackableType.Planes))
-                    {
-                        RepositionGameStart(manager.bubbleEmitter, hits.First());
-                    }
-                }
+                return;
             }
+
+            if (manager.arRaycastManager.Raycast(Input.GetTouch(0).position, hits, TrackableType.Planes))
+            {
+                target.textField.text = "Game plane set!";
+                var arRaycastHit = hits.First(); // can this throw an exception?
+                manager.debugText.text = $"Point selected: {arRaycastHit.pose.position}";
+                RepositionGameStart(bubbleEmitter, arRaycastHit);
+            }
+        }
+
+        private void CreatePlayingPlane(out Plane playingPlane)
+        {
+            var markerPosition = marker.transform.position;
+            var markerUp = markerPosition + Vector3.up;
+            var cameraToMarker = (Camera.current.transform.position - markerPosition).normalized;
+            var planePoint = Vector3.Cross(cameraToMarker, Vector3.up);
+            playingPlane = new Plane(Vector3.ProjectOnPlane(cameraToMarker, Vector3.up).normalized, markerPosition);
         }
 
         private void RepositionGameStart(GameObject bubbleEmitter, ARRaycastHit arRaycastHit)
@@ -223,8 +247,11 @@ public abstract class GameState
 
         public override void Start()
         {
+            manager.arPlaneManager.detectionMode = PlaneDetectionMode.None;
             needle = GameObject.Find("Needle");
             needle.GetComponent<MeshRenderer>().enabled = true;
+            manager.handProcessor.interactionPlane = manager.playingPlane;
+            manager.bubbleEmitter.GetComponent<BubbleEmitter>().interactionPlane = manager.playingPlane;
             manager.bubbleEmitter.SetActive(true);
         }
     }

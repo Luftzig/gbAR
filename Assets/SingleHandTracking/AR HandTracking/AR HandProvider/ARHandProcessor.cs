@@ -8,6 +8,8 @@ public class ARHandProcessor : MonoBehaviour {
     private ARHand currentHand = default;
     private bool isHandRectChange = default;
 
+    public Plane interactionPlane { get; set; }
+
     void Start() {
         Hand = Manager.instance.HandOnSpace;
         currentHand = new ARHand();
@@ -56,8 +58,11 @@ public class ARHandProcessor : MonoBehaviour {
 
         var wrist = currentHand.GetLandmark((int) ARHand.HandJoints.Wrist);
         var indexRoot = currentHand.GetLandmark((int) ARHand.HandJoints.IndexFingerMCP);
-        var thumbRoot = currentHand.GetLandmark((int) ARHand.HandJoints.ThumbMCP);
-        needle.transform.position = indexRoot + (indexRoot - wrist) / 2;
+        // var thumbRoot = currentHand.GetLandmark((int) ARHand.HandJoints.ThumbMCP);
+        var worldPosition = indexRoot + (indexRoot - wrist) / 2;
+        var planePosition = interactionPlane.ClosestPointOnPlane(worldPosition);
+        needle.transform.position = planePosition;
+        
     }
 
     private bool isHandStay() {
@@ -67,7 +72,7 @@ public class ARHandProcessor : MonoBehaviour {
             currentHandRect.Height == oldHandRect.Height &&
             currentHandRect.Rotaion == oldHandRect.Rotaion;
     }
-
+    
     public ARHand CurrentHand { get => currentHand; }
     public bool IsHandRectChange { get => isHandRectChange; }
     public HandRect CurrentHandRect { get => currentHandRect; }

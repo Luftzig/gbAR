@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other)
     {
+        Debug.Log($"Player: Trigger event {other.gameObject.name}");
         if (other.name == "Bubble(Clone)")
         {
             if (bubbleBurstPrefab)
@@ -43,10 +44,5 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        Debug.Assert(BubbleEmitter.requiredfruits != null, "How is this null?");
-        if (BubbleEmitter.requiredfruits.Count == 0)
-        {
-            Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
-        }
     }
 }
