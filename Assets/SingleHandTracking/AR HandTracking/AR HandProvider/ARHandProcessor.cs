@@ -1,16 +1,18 @@
 using MediapipeHandTracking;
 using UnityEngine;
 
-public class ARHandProcessor : MonoBehaviour {
+public class ARHandProcessor : MonoBehaviour
+{
     private GameObject Hand = default;
     private HandRect currentHandRect = default;
     private HandRect oldHandRect = default;
     private ARHand currentHand = default;
     private bool isHandRectChange = default;
 
-    public Plane interactionPlane { get; set; }
+    public GameObject gameOrigin { get; set; }
 
-    void Start() {
+    void Start()
+    {
         Hand = Manager.instance.HandOnSpace;
         currentHand = new ARHand();
         currentHandRect = new HandRect();
@@ -20,30 +22,38 @@ public class ARHandProcessor : MonoBehaviour {
     /// <summary>
     /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
     /// </summary>
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
         if (GetComponent<ARFrameProcessor>().HandProcessor == null) return;
         float[] handRectData = GetComponent<ARFrameProcessor>().HandProcessor.getHandRectData();
         float[] handLandmarksData = GetComponent<ARFrameProcessor>().HandProcessor.getHandLandmarksData();
 
-        if (null != handRectData) {
+        if (null != handRectData)
+        {
             currentHandRect = HandRect.ParseFrom(handRectData);
-            if (!isHandStay()) {
+            if (!isHandStay())
+            {
                 oldHandRect = currentHandRect;
                 isHandRectChange = true;
-            } else {
+            }
+            else
+            {
                 isHandRectChange = false;
             }
         }
 
-        if (null != handLandmarksData && !float.IsNegativeInfinity(GetComponent<ARFrameProcessor>().ImageRatio)) {
+        if (null != handLandmarksData && !float.IsNegativeInfinity(GetComponent<ARFrameProcessor>().ImageRatio))
+        {
             currentHand.ParseFrom(handLandmarksData, GetComponent<ARFrameProcessor>().ImageRatio);
         }
 
         Debug.Assert(Hand != null, $"Hand is null! {Hand}");
         if (!Hand.activeInHierarchy) return;
-        for (int i = 0; i < Hand.transform.childCount-1; i++) {
+        for (int i = 0; i < Hand.transform.childCount - 1; i++)
+        {
             Hand.transform.GetChild(i).transform.position = currentHand.GetLandmark(i);
         }
+
         PlaceNeedle();
     }
 
@@ -57,23 +67,48 @@ public class ARHandProcessor : MonoBehaviour {
         }
 
         var wrist = currentHand.GetLandmark((int) ARHand.HandJoints.Wrist);
-        var indexRoot = currentHand.GetLandmark((int) ARHand.HandJoints.IndexFingerMCP);
+        var indexMCP = currentHand.GetLandmark((int) ARHand.HandJoints.IndexFingerMCP);
+        var pinkyMCP = currentHand.GetLandmark((int) ARHand.HandJoints.PinkyMCP);
         // var thumbRoot = currentHand.GetLandmark((int) ARHand.HandJoints.ThumbMCP);
-        var worldPosition = indexRoot + (indexRoot - wrist) / 2;
-        var planePosition = interactionPlane.ClosestPointOnPlane(worldPosition);
-        needle.transform.position = planePosition;
-        
+        var worldPosition = (wrist + indexMCP + pinkyMCP) / 3;
+        if (gameOrigin != null)
+        {
+            worldPosition = new Vector3(worldPosition.x, worldPosition.y, gameOrigin.transform.position.z);
+        }
+
+        needle.transform.position = worldPosition;
     }
 
-    private bool isHandStay() {
-        return currentHandRect.XCenter == oldHandRect.XCenter &&
-            currentHandRect.YCenter == oldHandRect.YCenter &&
-            currentHandRect.Width == oldHandRect.Width &&
-            currentHandRect.Height == oldHandRect.Height &&
-            currentHandRect.Rotaion == oldHandRect.Rotaion;
+    public static Vector3 ToPlaneFixedPosition(Vector3 currentPosition, Vector3 originPosition)
+    {
+        var gameOriginToCamera = Camera.current.transform.position - originPosition;
+        var normalToCamera = Vector3.ProjectOnPlane(gameOriginToCamera, Vector3.up).normalized;
+        var gamePlane = new Plane(normalToCamera, originPosition);
+        var planeFixedPosition = gamePlane.ClosestPointOnPlane(currentPosition);
+        return planeFixedPosition;
     }
-    
-    public ARHand CurrentHand { get => currentHand; }
-    public bool IsHandRectChange { get => isHandRectChange; }
-    public HandRect CurrentHandRect { get => currentHandRect; }
+
+    private bool isHandStay()
+    {
+        return currentHandRect.XCenter == oldHandRect.XCenter &&
+               currentHandRect.YCenter == oldHandRect.YCenter &&
+               currentHandRect.Width == oldHandRect.Width &&
+               currentHandRect.Height == oldHandRect.Height &&
+               currentHandRect.Rotaion == oldHandRect.Rotaion;
+    }
+
+    public ARHand CurrentHand
+    {
+        get => currentHand;
+    }
+
+    public bool IsHandRectChange
+    {
+        get => isHandRectChange;
+    }
+
+    public HandRect CurrentHandRect
+    {
+        get => currentHandRect;
+    }
 }

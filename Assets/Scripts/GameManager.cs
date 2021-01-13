@@ -241,17 +241,21 @@ public abstract class GameState
             {
                 var position = needle.transform.position;
                 manager.debugText.text =
-                    $"Needle at: {position}, {(Camera.current.transform.position - position).magnitude}";
+                    $"Needle at: {position}, {(Camera.current.transform.position - position).magnitude}\n" +
+                    $"Emitter at: {manager.bubbleEmitter.transform.position}";
             }
         }
 
         public override void Start()
         {
+            for (var i = 0; i < manager.hand.transform.childCount; i++)
+            {
+                manager.hand.transform.GetChild(i).GetComponent<MeshRenderer>().enabled = true;
+            }
             manager.arPlaneManager.detectionMode = PlaneDetectionMode.None;
             needle = GameObject.Find("Needle");
             needle.GetComponent<MeshRenderer>().enabled = true;
-            manager.handProcessor.interactionPlane = manager.playingPlane;
-            manager.bubbleEmitter.GetComponent<BubbleEmitter>().interactionPlane = manager.playingPlane;
+            manager.handProcessor.gameOrigin = manager.bubbleEmitter;
             manager.bubbleEmitter.SetActive(true);
         }
     }

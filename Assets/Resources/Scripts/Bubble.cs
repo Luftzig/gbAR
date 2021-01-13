@@ -9,10 +9,14 @@ public class Bubble : MonoBehaviour
     private Vector3 wobbleVelocity;
     private float motionSpeed;
     private float motionWidth;
+    public Vector3 Origin { get; set; }
+    public float MaxDistance { get; set; }
     private Vector3 GetBubbleMotion(float motionSpeed, float motionWidth, float motionGravity)
     {
         motionAngle += Mathf.PI / 180.0f * motionSpeed;
-        return new Vector3(Mathf.Sin(motionAngle) * motionWidth, motionGravity, 0.0f);
+        var distanceFromOrigin = (transform.position - Origin).magnitude;
+        var scaler = Mathf.Clamp(MaxDistance - distanceFromOrigin, -0.5f, 1f);
+        return new Vector3(Mathf.Sin(motionAngle) * motionWidth, motionGravity, 0.0f) * scaler;
     }
     private void Start()
     {
@@ -24,8 +28,9 @@ public class Bubble : MonoBehaviour
     private void Update()
     {
         wobbleVelocity = GetBubbleMotion(motionSpeed, motionWidth, 0.05f);
-        Vector3 bubblePos = new Vector3(transform.position.x, transform.position.y, 5);
-        transform.position = bubblePos + wobbleVelocity * Time.deltaTime;
+        Vector3 bubblePos = new Vector3(transform.position.x, transform.position.y, Origin.z);
+        var newPosition = bubblePos + wobbleVelocity * Time.deltaTime;
+        transform.position = newPosition;
+        Debug.Log($"Bubble {name} new position: {transform.position}");
     }
-
 }

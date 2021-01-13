@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(gameObject);
     }
     public void OnTriggerEnter(Collider other)
     {
@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
             if (bubbleBurstPrefab)
             {
                 GetComponent<AudioSource>().Play();
-                GameObject explosion = (GameObject)Instantiate(bubbleBurstPrefab, other.transform.position, bubbleBurstPrefab.transform.rotation);
+                GameObject explosion = Instantiate(bubbleBurstPrefab, other.transform.position, bubbleBurstPrefab.transform.rotation);
                 Destroy(explosion, explosion.GetComponent<ParticleSystem>().main.startLifetimeMultiplier);
                 for(int i=0; i< BubbleEmitter.requiredfruits.Count;i++)
                 {
@@ -41,9 +41,5 @@ public class Player : MonoBehaviour
             }
 
         }
-    }
-
-    private void Update()
-    {
     }
 }

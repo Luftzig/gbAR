@@ -15,7 +15,6 @@ public class BubbleEmitter : MonoBehaviour
     public static GameObject UIFruitList;
     public float maxInitBubbleHeight = 1f;
     public float maxInitBubbleRange = 2f;
-    public Plane interactionPlane { get; set; }
 
     // Emit bubbles randomly in the scene
     void Start()
@@ -27,11 +26,11 @@ public class BubbleEmitter : MonoBehaviour
         UIFruitList = GameObject.Find("CheckList");
         foreach (GameObject fruit in requiredfruits)
         {
-            GameObject UIintsatnce = (GameObject) Instantiate(fruitUIPrefab);
-            UIintsatnce.name = fruit.name;
-            UIintsatnce.transform.SetParent(UIFruitList.transform);
+            GameObject uIintsatnce = (GameObject) Instantiate(fruitUIPrefab);
+            uIintsatnce.name = fruit.name;
+            uIintsatnce.transform.SetParent(UIFruitList.transform);
             Sprite fruitIcon = Resources.Load<Sprite>("UI/" + fruit.name);
-            UIintsatnce.transform.Find("Image").GetComponent<Image>().sprite = fruitIcon;
+            uIintsatnce.transform.Find("Image").GetComponent<Image>().sprite = fruitIcon;
         }
     }
 
@@ -42,9 +41,13 @@ public class BubbleEmitter : MonoBehaviour
             GameObject bubbleInstance = (GameObject) Instantiate(bubblePrefab);
             GameObject fruitInstance = (GameObject) Instantiate(generatedfruits[i]);
             fruitInstance.name = generatedfruits[i].name;
+            fruitInstance.transform.localScale = fruitInstance.transform.localScale * 0.5f;
             fruitInstance.transform.parent = bubbleInstance.transform;
             bubbleInstance.transform.position = new Vector3(Random.Range(-maxInitBubbleRange, maxInitBubbleRange),
                 Random.Range(0f, maxInitBubbleHeight), 0);
+            var bubbleScript = bubbleInstance.GetComponent<Bubble>();
+            bubbleScript.Origin = transform.position;
+            bubbleScript.MaxDistance = maxInitBubbleRange * 2;
         }
     }
 
